@@ -1,5 +1,5 @@
 ---
-title: "Win32k Callback Detouring (Research)"
+title: "Win32k Callback Detouringgg!"
 description: "Abusing Legitimate Kernel-to-User Callback Dispatch for Code Execution"
 pubDate: 2026-04-14
 tags: [research, internals]
