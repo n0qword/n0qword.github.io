@@ -1,0 +1,39 @@
+---
+import { t, type Locale } from "../../../i18n";
+import Layout from "../../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  const locales: Locale[] = ["en", "es"];
+  return locales.flatMap((locale) =>
+    posts.map((post) => ({
+      params: { locale, slug: post.slug },
+      props: { post, locale },
+    }))
+  );
+}
+
+const { post, locale } = Astro.props as { post: any; locale: Locale };
+const { Content } = await post.render();
+---
+
+<Layout title={post.data.title} description={post.data.description} locale={locale}>
+  <article>
+    <h1>{post.data.title}</h1>
+    <div class="post-meta">
+      <span>{post.data.pubDate.toLocaleDateString(locale === "en" ? "en-US" : "es-ES", { year: "numeric", month: "long", day: "numeric" })}</span>
+      {post.data.tags && post.data.tags.length > 0 && (
+        <ul class="tags-list" style="display: inline-flex; margin-left: 0.6rem;">
+          {post.data.tags.map((tag: string) => (
+            <li><span class="tag">{tag}</span></li>
+          ))}
+        </ul>
+      )}
+    </div>
+    <Content />
+    <div class="post-footer">
+      <a href={"/" + locale + "/"}>{t(locale, "ui.blog.back_to_home")}</a>
+    </div>
+  </article>
+</Layout>

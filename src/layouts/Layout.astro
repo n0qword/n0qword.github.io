@@ -1,32 +1,21 @@
 ---
-/**
- * Layout.astro — Base layout template for every page.
- *
- * Imports site metadata from src/data/home.md and provides:
- *   - HTML shell with <head> (fonts, meta, favicon)
- *   - Global CSS including red/black palette, CRT scanline overlay,
- *     typography, and component styles (post list, tags, search, etc.)
- *   - Header (.site-header) with logo + nav
- *   - Main content slot
- *   - Footer with copyright
- *
- * Props:
- *   title       — Page <title> (required)
- *   description — Meta description (optional, falls back to title)
- */
-
+import { t, type Locale, LOCALES, OTHER_LOCALE } from "../i18n";
 import { frontmatter as SITE } from "../data/home.md";
 
 export interface Props {
   title: string;
   description?: string;
+  locale: Locale;
 }
 
-const { title, description } = Astro.props;
+const { title, description, locale } = Astro.props;
+const siteName = locale === "es" ? SITE.name : t(locale, "site.name");
+const other = OTHER_LOCALE[locale];
+const otherUrl = `/${other}/`;
 ---
 
 <!doctype html>
-<html lang={SITE.lang}>
+<html lang={locale}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,23 +23,11 @@ const { title, description } = Astro.props;
     <meta name="description" content={description ?? title} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
-    <!-- Google Fonts: Barlow (body), Barlow Condensed (headings), IBM Plex Mono (code/ui) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600&family=Barlow+Condensed:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
 
     <style is:global>
-      /* ── Color palette ──────────────────────────────────
-         Red/black terminal-inspired theme.
-         --bg        = deep black background
-         --red       = accent (#d94f3d, blood-orange)
-         --red-dim   = muted red for borders/hover states
-         --red-bg    = very dark red for hover backgrounds
-         --line      = subtle border color
-         --fg        = primary text (warm off-white)
-         --fg2       = secondary text
-         --fg3       = muted text (dates, metadata)
-      */
       :root {
         --red: #d94f3d;
         --red-dim: #7a2c22;
@@ -66,13 +43,9 @@ const { title, description } = Astro.props;
         --body: "Barlow", sans-serif;
       }
 
-      /* ── Reset ─────────────────────────────────────────── */
       * { margin: 0; padding: 0; box-sizing: border-box; }
-
-      /* ── Selection ─────────────────────────────────────── */
       ::selection { background: rgba(217, 79, 61, 0.3); }
 
-      /* ── Base ─────────────────────────────────────────── */
       html { font-size: 17px; }
 
       body {
@@ -89,7 +62,6 @@ const { title, description } = Astro.props;
         flex-direction: column;
       }
 
-      /* CRT scanline overlay — subtle horizontal lines across entire viewport */
       body::before {
         content: "";
         position: fixed;
@@ -108,7 +80,6 @@ const { title, description } = Astro.props;
       a { color: inherit; text-decoration: none; transition: color 0.15s; }
       a:hover { color: var(--red); }
 
-      /* ── Site header ──────────────────────────────────── */
       .site-header {
         margin-bottom: 3rem;
         padding-bottom: 1.5rem;
@@ -139,10 +110,24 @@ const { title, description } = Astro.props;
       }
       .site-header nav a { color: var(--fg3); }
       .site-header nav a:hover { color: var(--fg); }
+      .lang-link {
+        color: var(--fg3) !important;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+      }
+      .lang-link:hover {
+        color: var(--red) !important;
+      }
+      .lang-link svg {
+        fill: var(--red);
+      }
+      .lang-link:hover svg {
+        fill: var(--fg);
+      }
 
       main { flex: 1; }
 
-      /* ── Headings ─────────────────────────────────────── */
       h1 {
         font-family: var(--cond);
         font-size: clamp(1.8rem, 4vw, 2.5rem);
@@ -167,7 +152,6 @@ const { title, description } = Astro.props;
         line-height: 1.6;
       }
 
-      /* ── Social link pills ────────────────────────────── */
       .social-links {
         display: flex;
         flex-wrap: wrap;
@@ -238,7 +222,6 @@ const { title, description } = Astro.props;
       p, li { margin-bottom: 1rem; }
       ul, ol { padding-left: 1.2rem; }
 
-      /* ── Code blocks & inline code ────────────────────── */
       code {
         font-family: var(--mono);
         font-size: 0.75rem;
@@ -282,9 +265,6 @@ const { title, description } = Astro.props;
         margin: 3rem 0;
       }
 
-      /* ── Post list (reused on home + /posts/) ────────── */
-
-      /* Target each li so JS can toggle .hidden-more / .hidden-filtered */
       .post-list { list-style: none; padding: 0; }
       .post-list li {
         margin-bottom: 2px;
@@ -323,7 +303,6 @@ const { title, description } = Astro.props;
         margin-top: 0.3rem;
       }
 
-      /* ── Post meta (date + tags on individual post page) ─ */
       .post-meta {
         font-family: var(--mono);
         font-size: 0.6rem;
@@ -340,7 +319,6 @@ const { title, description } = Astro.props;
         color: var(--line);
       }
 
-      /* ── Search bar & tag filter buttons ──────────────── */
       .search-bar {
         display: flex;
         flex-direction: column;
@@ -395,7 +373,6 @@ const { title, description } = Astro.props;
         background: var(--red-bg);
       }
 
-      /* ── Tags on each post card (red border pills) ───── */
       .tags-list {
         display: flex;
         flex-wrap: wrap;
@@ -423,11 +400,6 @@ const { title, description } = Astro.props;
         background: var(--red-bg);
       }
 
-      /* ── Visibility toggles for JS ─────────────────────
-         .hidden        — generic hidden (reserved)
-         .hidden-filtered — hidden by search/tag filter
-         .hidden-more   — hidden by "show more" limit (home only)
-      */
       .post-list li.hidden,
       .post-list li.hidden-filtered {
         display: none;
@@ -436,7 +408,6 @@ const { title, description } = Astro.props;
         display: none;
       }
 
-      /* ── "Ver más posts" button (home only) ──────────── */
       .btn-show-more {
         display: block;
         width: 100%;
@@ -460,7 +431,6 @@ const { title, description } = Astro.props;
         display: none;
       }
 
-      /* ── Post footer (individual post page) ──────────── */
       .post-footer {
         margin-top: 3rem;
         padding-top: 1.5rem;
@@ -471,7 +441,6 @@ const { title, description } = Astro.props;
       .post-footer a { color: var(--red); }
       .post-footer a:hover { text-decoration: underline; }
 
-      /* ── Site footer (copyright) ──────────────────────── */
       footer {
         margin-top: 4rem;
         padding-top: 1.5rem;
@@ -487,17 +456,23 @@ const { title, description } = Astro.props;
   </head>
   <body>
     <header class="site-header">
-      <a href="/" class="logo">{SITE.name}</a>
+      <a href={"/" + locale + "/"} class="logo">{siteName}</a>
       <nav>
-        <a href="/">Inicio</a>
-        <a href="/posts/">Posts</a>
+        <a href={"/" + locale + "/"}>{t(locale, "ui.nav.home")}</a>
+        <a href={"/" + locale + "/posts/"}>{t(locale, "ui.nav.posts")}</a>
+        <a href={otherUrl} class="lang-link">
+          <svg viewBox="0 0 24 24" width="13" height="13">
+            <path d="M12.87 15.07l-2.54-2.51.03-.03A17.52 17.52 0 0014.07 6H17V4h-7V2H8v2H1v2h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/>
+          </svg>
+          {t(locale, "ui.nav.language")}
+        </a>
       </nav>
     </header>
     <main>
       <slot />
     </main>
     <footer>
-      &copy; {new Date().getFullYear()} {SITE.author} &mdash; {SITE.name}
+      {t(locale, "ui.footer.copyright").replace("{year}", String(new Date().getFullYear())).replace("{author}", SITE.author).replace("{name}", siteName)}
     </footer>
   </body>
 </html>
