@@ -3,7 +3,7 @@
 name: n0qword
 
 # Meta description — used in <meta name="description"> and RSS feed
-description: "...."
+description: "Red Team & Security Researchs"
 
 # Site base URL — used by RSS feed generation (must match deployment URL)
 url: "https://n0qword.github.io/"
@@ -17,8 +17,7 @@ author: n0qword
 # Social links — rendered as underlined pills in hero section
 github: https://github.com/n0qword
 twitter: https://twitter.com/noqword
-# mail: 
+mail: noqword@proton.me 
 ---
-
 <!-- Bio text — rendered as the hero paragraph on index.astro -->
-...
+Red Team & Security Researchs
