@@ -5,6 +5,8 @@ pubDate: 2026-04-14
 tags: [research, internals]
 ---
 
+Repository: https://github.com/n0qword/win32k-callback-detouring
+
 ## Overview
 
 This injection technique abuses the kernel-to-user callback dispatch path used by the Windows graphical subsystem (**`win32k.sys`**) to obtain code execution inside a remote process. By locating the **`KernelCallbackTable`**` through the target process’s `**Process Environment Block (PEB)**`, an operator can enumerate callback entries and identify legitimate user-mode routines invoked during GUI-related kernel transitions.
