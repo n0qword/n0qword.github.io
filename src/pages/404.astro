@@ -1,16 +1,12 @@
 ---
-/**
- * 404.astro — Custom 404 page.
- *
- * Astro automatically serves this for any route that doesn't match
- * a defined page or static path.
- */
-
+import { t, getLocaleFromUrl } from "../i18n";
 import Layout from "../layouts/Layout.astro";
+
+const locale = getLocaleFromUrl(Astro.url.pathname);
 ---
 
-<Layout title="404 — Página no encontrada">
+<Layout title={t(locale, "ui.not_found.title")} locale={locale}>
   <h1><em>404</em></h1>
-  <p class="page-desc">Esta página no existe.</p>
-  <p><a href="/" style="color: var(--red);">&larr; Volver al inicio</a></p>
+  <p class="page-desc">{t(locale, "ui.not_found.message")}</p>
+  <p><a href={"/" + locale + "/"} style="color: var(--red);">{t(locale, "ui.not_found.back_to_home")}</a></p>
 </Layout>

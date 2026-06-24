@@ -1,0 +1,34 @@
+{
+  "site": {
+    "name": "bitácora",
+    "description": "Offensive operations notes, Windows protocol reverse engineering and red team tooling. Kerberos, MS-RPC, AD internals and EDR evasion.",
+    "bio": "Red teamer learning and sharing. Taking apart protocols, writing tooling and evading signatures."
+  },
+  "ui": {
+    "nav": {
+      "home": "Home",
+      "posts": "Posts",
+      "language": "Español"
+    },
+    "home": {
+      "search_placeholder": "search posts...",
+      "show_more": "show more posts ↓",
+      "no_results": "no posts match your search"
+    },
+    "posts": {
+      "title": "Posts",
+      "description": "Full archive of posts"
+    },
+    "blog": {
+      "back_to_home": "← Back to home"
+    },
+    "not_found": {
+      "title": "404 — Page not found",
+      "message": "This page does not exist.",
+      "back_to_home": "← Back to home"
+    },
+    "footer": {
+      "copyright": "© {year} {author} — {name}"
+    }
+  }
+}
