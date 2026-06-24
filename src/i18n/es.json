@@ -3,7 +3,7 @@
     "nav": {
       "home": "Inicio",
       "posts": "Posts",
-      "language": "Español"
+      "language": "English"
     },
     "home": {
       "search_placeholder": "buscar posts...",
