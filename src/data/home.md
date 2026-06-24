@@ -9,7 +9,7 @@ description: "Red Team & Security Researchs"
 url: "https://n0qword.github.io/"
 
 # Language code — set on <html lang=…>
-lang: en
+lang: es
 
 # Author name — shown in footer copyright
 author: n0qword
