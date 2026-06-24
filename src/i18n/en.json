@@ -1,14 +1,14 @@
 {
   "site": {
-    "name": "bitácora",
+    "name": "n0qword",
     "description": "Offensive operations notes, Windows protocol reverse engineering and red team tooling. Kerberos, MS-RPC, AD internals and EDR evasion.",
-    "bio": "Red teamer learning and sharing. Taking apart protocols, writing tooling and evading signatures."
+    "bio": "Red Team & Security Researchs."
   },
   "ui": {
     "nav": {
       "home": "Home",
       "posts": "Posts",
-      "language": "Español"
+      "language": "English"
     },
     "home": {
       "search_placeholder": "search posts...",
