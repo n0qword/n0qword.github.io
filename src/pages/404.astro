@@ -1,0 +1,16 @@
+---
+/**
+ * 404.astro — Custom 404 page.
+ *
+ * Astro automatically serves this for any route that doesn't match
+ * a defined page or static path.
+ */
+
+import Layout from "../layouts/Layout.astro";
+---
+
+<Layout title="404 — Página no encontrada">
+  <h1><em>404</em></h1>
+  <p class="page-desc">Esta página no existe.</p>
+  <p><a href="/" style="color: var(--red);">&larr; Volver al inicio</a></p>
+</Layout>

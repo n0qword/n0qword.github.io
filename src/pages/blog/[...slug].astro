@@ -1,0 +1,55 @@
+---
+/**
+ * blog/[...slug].astro — Individual blog post page.
+ *
+ * Uses Astro's file-based dynamic routing ([...slug] = catch-all).
+ * getStaticPaths() pre-generates one page per markdown file in the
+ * "blog" content collection at build time.
+ *
+ * Each post is rendered from its markdown body via post.render().
+ */
+
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<Layout title={post.data.title} description={post.data.description}>
+  <article>
+    <h1>{post.data.title}</h1>
+
+    <!-- Post metadata: publication date + tags -->
+    <div class="post-meta">
+      <span>{post.data.pubDate.toLocaleDateString("es-ES", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })}</span>
+      {post.data.tags && post.data.tags.length > 0 && (
+        <ul class="tags-list" style="display: inline-flex; margin-left: 0.6rem;">
+          {post.data.tags.map((tag) => (
+            <li><span class="tag">{tag}</span></li>
+          ))}
+        </ul>
+      )}
+    </div>
+
+    <!-- Markdown rendered content -->
+    <Content />
+
+    <!-- Navigation back to home -->
+    <div class="post-footer">
+      <a href="/">&larr; Volver al inicio</a>
+    </div>
+  </article>
+</Layout>

@@ -1,0 +1,101 @@
+---
+/**
+ * index.astro — Home page (/) / landing.
+ *
+ * Renders:
+ *   - Hero: bio text from src/data/home.md + social link pills
+ *   - Search bar + tag filter buttons
+ *   - Post list (reverse-chronological), limited to INITIAL_COUNT = 3
+ *   - "Ver más posts" button (if posts.length > 3)
+ *   - "No results" message for search/filter
+ *
+ * JS is imported from src/scripts/filters.js (shared with /posts/).
+ */
+
+import Layout from "../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { frontmatter as SITE, Content } from "../data/home.md";
+
+const posts = await getCollection("blog");
+posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+// Collect all unique tags across all posts, sorted alphabetically
+const allTags = [...new Set(posts.flatMap((p) => p.data.tags ?? []))].sort();
+const INITIAL_COUNT = 3;
+---
+
+<Layout title={SITE.name} description={SITE.description}>
+  <h1><span class="hl">//</span> {SITE.name}</h1>
+
+  <div class="hero">
+    <Content />
+    <div class="social-links">
+      <a href={SITE.github} target="_blank" rel="noopener">github</a>
+      <span class="social-sep">/</span>
+      <a href={SITE.twitter} target="_blank" rel="noopener">twitter</a>
+      <span class="social-sep">/</span>
+      <a href="/posts/">posts</a>
+      <span class="social-sep">/</span>
+      <a href={`mailto:${SITE.mail}`}>mail</a>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <input class="search-input" type="text" id="search" placeholder="buscar posts..." autocomplete="off" />
+    <div class="tag-filters" id="tag-filters">
+      {allTags.map((tag) => (
+        <button class="tag-filter" data-tag={tag}>{tag}</button>
+      ))}
+    </div>
+  </div>
+
+  <!--
+    Post list.
+    data-tags stores comma-separated tags for client-side JS filtering.
+    Posts beyond INITIAL_COUNT get .hidden-more toggled by filters.js.
+  -->
+  <ul class="post-list" id="post-list">
+    {
+      posts.map((post, i) => (
+        <li data-tags={(post.data.tags ?? []).join(",")} class={i >= INITIAL_COUNT ? "hidden-more" : ""}>
+          <time datetime={post.data.pubDate.toISOString()}>
+            {post.data.pubDate.toLocaleDateString("es-ES", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </time>
+          <a class="post-title" href={`/blog/${post.slug}/`}>{post.data.title}</a>
+          <p class="post-excerpt">{post.data.description}</p>
+          {
+            post.data.tags && post.data.tags.length > 0 && (
+              <ul class="tags-list">
+                {post.data.tags.map((tag) => (
+                  <span class="tag" data-tag={tag}>{tag}</span>
+                ))}
+              </ul>
+            )
+          }
+        </li>
+      ))
+    }
+  </ul>
+
+  <!-- "Ver más" button hidden by filter JS until needed -->
+  {
+    posts.length > INITIAL_COUNT && (
+      <button class="btn-show-more" id="btn-show-more">
+        ver m&aacute;s posts &darr;
+      </button>
+    )
+  }
+
+  <!-- Hidden by default, shown by JS when no posts match search/filter -->
+  <p id="no-results" style="display: none; color: var(--fg3); font-family: var(--mono); font-size: 0.7rem; text-align: center; padding: 2rem 0;">
+    ning&uacute;n post coincide con tu b&uacute;squeda
+  </p>
+
+  <script>
+    import "../scripts/filters.js";
+  </script>
+</Layout>
