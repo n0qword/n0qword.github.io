@@ -1,23 +1,11 @@
 ---
-# Site name — used in <title>, header .logo, footer copyright
 name: n0qword
-
-# Meta description — used in <meta name="description"> and RSS feed
-description: "Red Team & Security Researchs"
-
-# Site base URL — used by RSS feed generation (must match deployment URL)
+description: "Offensive operations notes, Windows protocol reverse engineering and red team tooling. Kerberos, MS-RPC, AD internals and EDR evasion."
 url: "https://n0qword.github.io/"
-
-# Language code — set on <html lang=…>
-lang: es
-
-# Author name — shown in footer copyright
+lang: en
 author: n0qword
-
-# Social links — rendered as underlined pills in hero section
 github: https://github.com/n0qword
 twitter: https://twitter.com/noqword
-mail: noqword@proton.me 
+mail: noqword@proton.me
 ---
-<!-- Bio text — rendered as the hero paragraph on index.astro -->
-Red Team & Security Researchs
+Red Team & Security Researchs — Windows internals, kernel callbacks, protocol reversing and offensive tooling.

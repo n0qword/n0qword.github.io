@@ -1,15 +1,3 @@
-/**
- * filters.js — Client-side search & tag filter logic for post listings.
- *
- * Shared between index.astro (home, limited to INITIAL_COUNT) and
- * posts/index.astro (full archive, no limit).
- *
- * Behaviour is determined by whether #btn-show-more exists in the DOM:
- *   - Present → home page: hides all posts beyond INITIAL_COUNT until
- *               "ver más" is clicked; search/filter reveals all.
- *   - Absent  → archive page: no limit, show all matching posts.
- */
-
 (function () {
   const INITIAL_COUNT = 3;
 
@@ -20,7 +8,6 @@
   const btnMore = document.getElementById("btn-show-more");
 
   let activeTag = null;
-  let showingAll = false;
 
   function filterPosts() {
     const query = searchInput.value.toLowerCase();
@@ -44,11 +31,9 @@
 
     if (btnMore) {
       if (isSearching) {
-        showingAll = true;
         postItems.forEach((p) => p.classList.remove("hidden-more"));
         btnMore.classList.add("hidden");
       } else {
-        showingAll = false;
         postItems.forEach((p, i) => {
           p.classList.remove("hidden-more");
           if (i >= INITIAL_COUNT) p.classList.add("hidden-more");
@@ -61,7 +46,6 @@
   if (searchInput) {
     searchInput.addEventListener("input", () => {
       if (btnMore && searchInput.value) {
-        showingAll = true;
         postItems.forEach((p) => p.classList.remove("hidden-more"));
         btnMore.classList.add("hidden");
       }
@@ -87,6 +71,7 @@
   document.addEventListener("click", (e) => {
     const tagEl = e.target.closest(".tag");
     if (tagEl) {
+      e.preventDefault();
       const tag = tagEl.dataset.tag;
       if (!tag) return;
       activeTag = tag;
@@ -100,7 +85,6 @@
 
   if (btnMore) {
     btnMore.addEventListener("click", () => {
-      showingAll = true;
       postItems.forEach((p) => p.classList.remove("hidden-more"));
       btnMore.classList.add("hidden");
     });

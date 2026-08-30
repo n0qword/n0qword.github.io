@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { frontmatter as SITE, Content } from "../data/home.md";
+---
+
+<Layout title={"About — " + SITE.name} description="About n0qword">
+  <h1>About</h1>
+  <p class="page-desc">
+    <span class="count">01</span> &nbsp;who runs this blog
+  </p>
+  <Content />
+  <h2>research focus</h2>
+  <ul>
+    <li>Windows internals &amp; kernel callback abuse</li>
+    <li>Protocol reverse engineering — Kerberos, MS-RPC, AD</li>
+    <li>Red team tooling &amp; EDR evasion</li>
+    <li>Offensive operations notes</li>
+  </ul>
+  <h2>contact</h2>
+  <div class="social-links">
+    <a href={SITE.github} target="_blank" rel="noopener">github</a>
+    <span class="social-sep">/</span>
+    <a href={SITE.twitter} target="_blank" rel="noopener">twitter</a>
+    <span class="social-sep">/</span>
+    <a href={"mailto:" + SITE.mail}>mail</a>
+  </div>
+</Layout>

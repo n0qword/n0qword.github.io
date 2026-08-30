@@ -1,0 +1,44 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { frontmatter as SITE } from "../../data/home.md";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props as { post: any };
+const { Content } = await post.render();
+const formatDate = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+---
+
+<Layout title={post.data.title + " — " + SITE.name} description={post.data.description}>
+  <article>
+    <h1>{post.data.title}</h1>
+    <div class="post-meta">
+      <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+      {post.data.tags && post.data.tags.length > 0 && (
+        <>
+          <span class="sep">/</span>
+          <ul class="tags-list">
+            {post.data.tags.map((tag: string) => (
+              <li><span class="tag" data-tag={tag}>{tag}</span></li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+    {post.data.image && (
+      <img class="post-cover" src={post.data.image} alt="" />
+    )}
+    <Content />
+    <div class="post-footer">
+      <a href="/">← Back to home</a>
+    </div>
+  </article>
+</Layout>

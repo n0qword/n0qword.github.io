@@ -1,18 +1,8 @@
-# Deploy Astro site to GitHub Pages.
-#
-# Prerequisites:
-#   1. Go to repo Settings → Pages → Source → "GitHub Actions"
-#   2. If using a project site (<user>.github.io/<repo>/), set base in
-#      astro.config.mjs (see comments in that file).
-#
-# Trigger: push to main (or any branch listed below).
-
 name: Deploy to GitHub Pages
 
 on:
   push:
     branches: [main]
-
   workflow_dispatch:
 
 permissions:

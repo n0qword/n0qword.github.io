@@ -1,34 +1,21 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
-import { frontmatter as SITE, Content } from "../data/home.md";
+import { frontmatter as SITE } from "../../data/home.md";
 
 const posts = await getCollection("blog");
 posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 const allTags = [...new Set(posts.flatMap((p) => p.data.tags ?? []))].sort();
-const INITIAL_COUNT = 3;
-const siteName = SITE.name;
 const formatDate = (d: Date) =>
   d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+const siteName = SITE.name;
 ---
 
-<Layout title={`${siteName} research blog`} description={SITE.description}>
-  <div class="hero">
-    <h1 class="hero-title">
-      <span class="pixel-word">n0qword</span>
-      <span class="hero-sub">research blog</span>
-    </h1>
-    <div class="hero-text"><Content /></div>
-    <div class="social-links">
-      <a href={SITE.github} target="_blank" rel="noopener">github</a>
-      <span class="social-sep">/</span>
-      <a href={SITE.twitter} target="_blank" rel="noopener">twitter</a>
-      <span class="social-sep">/</span>
-      <a href="/posts/">posts</a>
-      <span class="social-sep">/</span>
-      <a href={"mailto:" + SITE.mail}>mail</a>
-    </div>
-  </div>
+<Layout title={"Posts — " + siteName} description="Full archive of posts">
+  <h1>Posts</h1>
+  <p class="page-desc">
+    <span class="count">{String(posts.length).padStart(2, "0")}</span> &nbsp;full archive of posts
+  </p>
   <div class="search-bar">
     <input class="search-input" type="text" id="search" placeholder="search posts..." autocomplete="off" />
     <div class="tag-filters" id="tag-filters">
@@ -38,8 +25,8 @@ const formatDate = (d: Date) =>
     </div>
   </div>
   <ul class="post-list" id="post-list">
-    {posts.map((post, i) => (
-      <li data-tags={(post.data.tags ?? []).join(",")} class={i >= INITIAL_COUNT ? "hidden-more" : ""}>
+    {posts.map((post) => (
+      <li data-tags={(post.data.tags ?? []).join(",")}>
         <a class="post-card" href={"/blog/" + post.slug + "/"}>
           <div class={post.data.image ? "post-card-cover" : "post-card-cover placeholder"}>
             {post.data.image ? (
@@ -69,11 +56,8 @@ const formatDate = (d: Date) =>
       </li>
     ))}
   </ul>
-  {posts.length > INITIAL_COUNT && (
-    <button class="btn-show-more" id="btn-show-more">show more posts ↓</button>
-  )}
   <p id="no-results" style="display: none; text-align: center; font-family: var(--mono); font-size: 0.6rem; color: var(--fg3); margin-top: 1.5rem;">
     no posts match your search
   </p>
-  <script>import "../scripts/filters.js";</script>
+  <script>import "../../scripts/filters.js";</script>
 </Layout>
