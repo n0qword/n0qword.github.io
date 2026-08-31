@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { frontmatter as SITE, Content } from "../data/home.md";
+import { frontmatter as SITE } from "../data/home.md";
 ---
 
 <Layout title={"About — " + SITE.name} description="About n0qword">
@@ -8,7 +8,11 @@ import { frontmatter as SITE, Content } from "../data/home.md";
   <p class="page-desc">
     <span class="count">01</span> &nbsp;who runs this blog
   </p>
-  <Content />
+  <p>
+    Passionate about offensive security and red team operations, focused on
+    security research with a particular interest in internal protocol
+    investigation, offensive techniques, and adversary emulation.
+  </p>
   <h2>research focus</h2>
   <ul>
     <li>Windows internals &amp; kernel callback abuse</li>
