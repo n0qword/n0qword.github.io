@@ -14,10 +14,10 @@ export async function getStaticPaths() {
 const { post } = Astro.props as { post: any };
 const { Content } = await post.render();
 const formatDate = (d: Date) =>
-  d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 ---
 
-<Layout title={post.data.title + " — " + SITE.name} description={post.data.description}>
+<Layout title={post.data.title + " — " + SITE.name} description={post.data.description} image={post.data.image}>
   <article>
     <h1>{post.data.title}</h1>
     <div class="post-meta">
@@ -34,11 +34,11 @@ const formatDate = (d: Date) =>
       )}
     </div>
     {post.data.image && (
-      <img class="post-cover" src={post.data.image} alt="" />
+      <img class="post-cover" src={post.data.image} alt="" fetchpriority="high" />
     )}
     <Content />
     <div class="post-footer">
-      <a href="/">← Back to home</a>
+      <a href="/">← back to home</a>
     </div>
   </article>
 </Layout>

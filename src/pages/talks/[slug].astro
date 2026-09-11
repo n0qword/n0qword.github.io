@@ -1,0 +1,74 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import fs from "node:fs";
+import path from "node:path";
+
+export async function getStaticPaths() {
+  const talksRoot = path.join(process.cwd(), "public", "talks");
+  if (!fs.existsSync(talksRoot)) return [];
+  const slugs: { params: { slug: string }; props: { title: string; date: string; slides: number; description?: string } }[] = [];
+  for (const entry of fs.readdirSync(talksRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const metaPath = path.join(talksRoot, entry.name, "meta.json");
+    if (!fs.existsSync(metaPath)) continue;
+    const meta = JSON.parse(fs.readFileSync(metaPath, "utf-8"));
+    slugs.push({
+      params: { slug: entry.name },
+      props: {
+        title: meta.title ?? entry.name,
+        date: meta.date ?? "",
+        slides: meta.slides ?? 0,
+        description: meta.description ?? "",
+      },
+    });
+  }
+  return slugs;
+}
+
+const { slug } = Astro.params;
+const { title, date, slides, description } = Astro.props as { title: string; date: string; slides: number; description?: string };
+const formatDate = (d: string) => {
+  if (!d) return "";
+  const dt = new Date(d + "T00:00:00");
+  return dt.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+};
+const slideNums = Array.from({ length: slides }, (_, i) => String(i + 1).padStart(2, "0"));
+---
+
+<Layout title={title} description={description || ("Talk: " + title)}>
+  <article>
+    <h1>{title}</h1>
+    <div class="post-meta">
+      {date && <time>{formatDate(date)}</time>}
+      {date && <span class="sep">/</span>}
+      <span>{slides} slides</span>
+    </div>
+    <div class="deck">
+      {slideNums.map((num) => (
+        <img class="deck-slide" src={"/talks/" + slug + "/slide-" + num + ".png"} alt={"Slide " + num} loading={num === "01" ? "eager" : "lazy"} />
+      ))}
+    </div>
+    <div class="post-footer">
+      <a href="/talks/">← All talks</a>
+      <span class="sep"> / </span>
+      <a href="/">home</a>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .deck {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .deck-slide {
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--bg1);
+  }
+  .post-footer .sep {
+    color: var(--line);
+  }
+</style>

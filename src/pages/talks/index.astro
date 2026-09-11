@@ -1,0 +1,65 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { frontmatter as SITE } from "../../data/home.md";
+import fs from "node:fs";
+import path from "node:path";
+
+const talksRoot = path.join(process.cwd(), "public", "talks");
+
+type Talk = {
+  slug: string;
+  title: string;
+  date: string;
+  slides: number;
+  description?: string;
+};
+
+const talks: Talk[] = [];
+if (fs.existsSync(talksRoot)) {
+  for (const entry of fs.readdirSync(talksRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) continue;
+    const metaPath = path.join(talksRoot, entry.name, "meta.json");
+    if (!fs.existsSync(metaPath)) continue;
+    const meta = JSON.parse(fs.readFileSync(metaPath, "utf-8"));
+    talks.push({
+      slug: entry.name,
+      title: meta.title ?? entry.name,
+      date: meta.date ?? "",
+      slides: meta.slides ?? 0,
+      description: meta.description ?? "",
+    });
+  }
+}
+talks.sort((a, b) => (a.date < b.date ? 1 : -1));
+const formatDate = (d: string) => {
+  if (!d) return "";
+  const dt = new Date(d + "T00:00:00");
+  return dt.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+};
+---
+
+<Layout title={"Talks — " + SITE.name} description="Presentations & talks">
+  <h1>Talks</h1>
+  <p class="page-desc">
+    <span class="count">{String(talks.length).padStart(2, "0")}</span> &nbsp;presentations
+  </p>
+  {talks.length === 0 ? (
+    <p style="color: var(--fg2); font-size: 0.85rem;">no talks yet — drop a .pptx in the talks/ folder and run: npm run talks:export</p>
+  ) : (
+    <ul class="post-list">
+      {talks.map((talk) => (
+        <li>
+          <a class="post-item" href={"/talks/" + talk.slug + "/"}>
+            <div class="post-item-title">{talk.title}</div>
+            {talk.description && <p class="post-item-excerpt">{talk.description}</p>}
+            <div class="post-item-meta">
+              {talk.date && <time>{formatDate(talk.date)}</time>}
+              {talk.date && <span>/</span>}
+              <span>{talk.slides} slides</span>
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</Layout>

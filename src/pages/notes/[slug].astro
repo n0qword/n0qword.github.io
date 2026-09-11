@@ -1,0 +1,43 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { frontmatter as SITE } from "../../data/home.md";
+
+export async function getStaticPaths() {
+  const notes = await getCollection("notes");
+  return notes.map((note) => ({
+    params: { slug: note.slug },
+    props: { note },
+  }));
+}
+
+const { note } = Astro.props as { note: any };
+const { Content } = await note.render();
+const formatDate = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+---
+
+<Layout title={note.data.title + " — " + SITE.name} description={note.data.title}>
+  <article>
+    <h1>{note.data.title}</h1>
+    <div class="post-meta">
+      <time datetime={note.data.pubDate.toISOString()}>{formatDate(note.data.pubDate)}</time>
+      {note.data.tags && note.data.tags.length > 0 && (
+        <>
+          <span class="sep">/</span>
+          <ul class="tags-list">
+            {note.data.tags.map((tag: string) => (
+              <li><span class="tag" data-tag={tag}>{tag}</span></li>
+            ))}
+          </ul>
+        </>
+      )}
+    </div>
+    <Content />
+    <div class="post-footer">
+      <a href="/notes/">← all notes</a>
+      <span class="sep"> / </span>
+      <a href="/">home</a>
+    </div>
+  </article>
+</Layout>

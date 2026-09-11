@@ -1,0 +1,40 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { frontmatter as SITE } from "../../data/home.md";
+
+const notes = await getCollection("notes");
+notes.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+const formatDate = (d: Date) =>
+  d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+---
+
+<Layout title={"Notes — " + SITE.name} description="Random notes">
+  <h1>Notes</h1>
+  <p class="page-desc">
+    <span class="count">{String(notes.length).padStart(2, "0")}</span> &nbsp;random notes
+  </p>
+  {notes.length === 0 ? (
+    <p style="color: var(--fg2); font-size: 0.85rem;">no notes yet</p>
+  ) : (
+    <ul class="post-list">
+      {notes.map((note) => (
+        <li>
+          <a class="post-item" href={"/notes/" + note.slug + "/"}>
+            <div class="post-item-title">{note.data.title}</div>
+            <div class="post-item-meta">
+              <time datetime={note.data.pubDate.toISOString()}>{formatDate(note.data.pubDate)}</time>
+              {note.data.tags && note.data.tags.length > 0 && (
+                <div class="post-item-tags">
+                  {note.data.tags.map((tag) => (
+                    <span class="tag" data-tag={tag}>{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</Layout>

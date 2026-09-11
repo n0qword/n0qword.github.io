@@ -15,7 +15,7 @@
     let visibleCount = 0;
 
     for (const post of postItems) {
-      const tags = post.dataset.tags || "";
+      const tags = post.dataset.tags ? post.dataset.tags.split(",") : [];
       const text = post.textContent.toLowerCase();
       const matchesSearch = !query || text.includes(query);
       const matchesTag = !activeTag || tags.includes(activeTag);
@@ -44,13 +44,7 @@
   }
 
   if (searchInput) {
-    searchInput.addEventListener("input", () => {
-      if (btnMore && searchInput.value) {
-        postItems.forEach((p) => p.classList.remove("hidden-more"));
-        btnMore.classList.add("hidden");
-      }
-      filterPosts();
-    });
+    searchInput.addEventListener("input", filterPosts);
   }
 
   for (const btn of tagFilters) {
@@ -71,9 +65,9 @@
   document.addEventListener("click", (e) => {
     const tagEl = e.target.closest(".tag");
     if (tagEl) {
-      e.preventDefault();
       const tag = tagEl.dataset.tag;
       if (!tag) return;
+      e.preventDefault();
       activeTag = tag;
       for (const b of tagFilters) {
         b.classList.toggle("active", b.dataset.tag === tag);

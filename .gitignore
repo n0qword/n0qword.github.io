@@ -1,3 +1,7 @@
 node_modules/
 dist/
 .astro/
+
+# Local talk export pipeline (PowerPoint rendering stays local; only rendered PNGs are committed)
+/scripts/
+/talks/

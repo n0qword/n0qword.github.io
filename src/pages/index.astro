@@ -7,17 +7,13 @@ const posts = await getCollection("blog");
 posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
 const allTags = [...new Set(posts.flatMap((p) => p.data.tags ?? []))].sort();
 const INITIAL_COUNT = 3;
-const siteName = SITE.name;
 const formatDate = (d: Date) =>
-  d.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+  d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 ---
 
-<Layout title={`${siteName} research blog`} description={SITE.description}>
+<Layout title={`${SITE.name} research blog`} description={SITE.description}>
   <div class="hero">
-    <h1 class="hero-title">
-      <span class="pixel-word">n0qword</span>
-      <span class="hero-sub">research blog</span>
-    </h1>
+    <h1>{SITE.name}</h1>
     <div class="hero-text"><Content /></div>
     <div class="social-links">
       <a href={SITE.github} target="_blank" rel="noopener">github</a>
@@ -42,40 +38,51 @@ const formatDate = (d: Date) =>
   <ul class="post-list" id="post-list">
     {posts.map((post, i) => (
       <li data-tags={(post.data.tags ?? []).join(",")} class={i >= INITIAL_COUNT ? "hidden-more" : ""}>
-        <a class="post-card" href={"/blog/" + post.slug + "/"}>
-          <div class={post.data.image ? "post-card-cover" : "post-card-cover placeholder"}>
-            {post.data.image ? (
-              <img src={post.data.image} alt="" loading="lazy" />
-            ) : (
-              <span class="post-cover-glyph">_</span>
+        <a class="post-item" href={"/blog/" + post.slug + "/"}>
+          <div class="post-item-title">{post.data.title}</div>
+          <p class="post-item-excerpt">{post.data.description}</p>
+          <div class="post-item-meta">
+            <time datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div class="post-item-tags">
+                {post.data.tags.map((tag) => (
+                  <span class="tag" data-tag={tag}>{tag}</span>
+                ))}
+              </div>
             )}
-            <span class="post-card-overlay"></span>
-            <div class="post-card-meta">
-              {post.data.tags && post.data.tags.length > 0 && (
-                <div class="post-card-tags">
-                  {post.data.tags.map((tag) => (
-                    <span class="tag" data-tag={tag}>{tag}</span>
-                  ))}
-                </div>
-              )}
-              <time class="post-card-date" datetime={post.data.pubDate.toISOString()}>
-                {formatDate(post.data.pubDate)}
-              </time>
-            </div>
-            <h2 class="post-card-title">{post.data.title}</h2>
-          </div>
-          <div class="post-card-body">
-            <p class="post-card-excerpt">{post.data.description}</p>
           </div>
         </a>
       </li>
     ))}
   </ul>
   {posts.length > INITIAL_COUNT && (
-    <button class="btn-show-more" id="btn-show-more">show more posts ↓</button>
+    <button class="btn-show-more" id="btn-show-more">show more</button>
   )}
-  <p id="no-results" style="display: none; text-align: center; font-family: var(--mono); font-size: 0.6rem; color: var(--fg3); margin-top: 1.5rem;">
+  <p id="no-results" style="display: none; text-align: center; font-family: var(--mono); font-size: 0.75rem; color: var(--fg3); margin-top: 1.5rem;">
     no posts match your search
   </p>
   <script>import "../scripts/filters.js";</script>
+
+  <style>
+    .hero {
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .hero h1 {
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+    .hero-text {
+      color: var(--fg2);
+      font-size: 0.9rem;
+      margin-bottom: 0.8rem;
+      line-height: 1.7;
+    }
+    .hero-text p { margin: 0; }
+  </style>
 </Layout>
