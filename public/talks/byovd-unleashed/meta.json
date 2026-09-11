@@ -1,6 +1,6 @@
 {
     "date":  "2026-08-19",
     "title":  "BYOVD Unleashed: From vulnerable drivers to Windows kernel control",
-    "description":  "Using vulnerable drivers to take down PPL-protected security products like AV/EDR.",
+    "description":  "A talk on BYOVD(Bring Your Own Vulnerable Driver) attacks, presented at CFC Week 2026.",
     "slides":  30
 }
