@@ -2,8 +2,8 @@
 title: "Win32k Callback Detouringgg!"
 description: "Abusing Legitimate Kernel-to-User Callback Dispatch for Code Execution"
 pubDate: 2026-04-14
-tags: [research, internals]
-image: https://github.com/user-attachments/assets/ef2181e0-440c-4c76-a82d-c7ce9efdd94a
+tags: [research, internals, windows]
+image: https://github.com/user-attachments/assets/b7809547-6322-4e8e-b593-82e3c7ff9858
 ---
 
 Repository: https://github.com/n0qword/win32k-callback-detouring
