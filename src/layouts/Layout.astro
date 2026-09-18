@@ -32,6 +32,21 @@ const siteUrl = "https://n0qword.github.io";
     <meta name="twitter:description" content={description ?? title} />
     {ogImage && <meta name="twitter:image" content={ogImage} />}
 
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" media="(prefers-color-scheme: light)" href="/icons/iceking-light.png" />
+    <link rel="icon" type="image/png" media="(prefers-color-scheme: dark)" href="/icons/iceking-dark.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <script is:inline>
+      (function () {
+        var t = localStorage.getItem("theme");
+        if (t !== "light" && t !== "dark") {
+          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      })();
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="preload" as="style" />
@@ -42,6 +57,11 @@ const siteUrl = "https://n0qword.github.io";
 
     <style is:global>
       :root {
+        --mono: "JetBrains Mono", monospace;
+        --body: "Inter", system-ui, sans-serif;
+      }
+
+      :root, :root[data-theme="dark"] {
         --bg: #06070b;
         --bg1: #0d0e12;
         --bg2: #16171c;
@@ -49,15 +69,26 @@ const siteUrl = "https://n0qword.github.io";
         --fg: #e0e0e0;
         --fg2: #a0a0a0;
         --fg3: #666;
-        --red: #e54d2e;
-        --red-dim: #c4422a;
-        --red-bg: #1a0e0b;
-        --mono: "JetBrains Mono", monospace;
-        --body: "Inter", system-ui, sans-serif;
+        --blue: #8b9cf7;
+        --blue-dim: #6d7ae0;
+        --blue-bg: #141834;
+      }
+
+      :root[data-theme="light"] {
+        --bg: #fafafc;
+        --bg1: #f2f2f6;
+        --bg2: #e6e6ec;
+        --line: #d8d8e0;
+        --fg: #17171c;
+        --fg2: #4c4c55;
+        --fg3: #8a8a92;
+        --blue: #5b6de0;
+        --blue-dim: #4857bb;
+        --blue-bg: #e9ebfa;
       }
 
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      ::selection { background: rgba(229, 77, 46, 0.25); }
+      ::selection { background: rgba(139, 156, 247, 0.25); }
 
       html { font-size: 16px; }
 
@@ -75,8 +106,8 @@ const siteUrl = "https://n0qword.github.io";
         flex-direction: column;
       }
 
-      a { color: inherit; text-decoration: none; }
-      a:hover { color: var(--red); }
+      a { color: var(--blue); text-decoration: none; }
+      a:hover { color: var(--blue); text-decoration: underline; }
 
       .site-header {
         margin-bottom: 2.5rem;
@@ -87,16 +118,24 @@ const siteUrl = "https://n0qword.github.io";
         justify-content: space-between;
       }
 
-      .site-header .site-name {
-        font-family: var(--mono);
-        font-size: 0.85rem;
-        font-weight: 500;
-        letter-spacing: -0.01em;
-        color: var(--fg);
+      .site-brand {
+        display: flex;
+        align-items: center;
       }
+      .brand-ico {
+        height: 72px;
+        width: auto;
+        border: none;
+        border-radius: 0;
+        display: block;
+      }
+      .brand-ico.ico-light { display: none; }
+      :root[data-theme="light"] .brand-ico.ico-dark { display: none; }
+      :root[data-theme="light"] .brand-ico.ico-light { display: block; }
 
       .site-header nav {
         display: flex;
+        align-items: center;
         gap: 1.5rem;
       }
       .site-header nav a {
@@ -106,6 +145,29 @@ const siteUrl = "https://n0qword.github.io";
         transition: color 0.15s;
       }
       .site-header nav a:hover { color: var(--fg); }
+
+      .theme-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.2rem 0.4rem;
+        background: transparent;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        color: var(--fg2);
+        font-size: 0.8rem;
+        line-height: 1;
+        cursor: pointer;
+        transition: border-color 0.15s, color 0.15s;
+      }
+      .theme-toggle:hover {
+        border-color: var(--blue-dim);
+        color: var(--blue);
+      }
+      .theme-toggle .t-dark { display: inline; }
+      .theme-toggle .t-light { display: none; }
+      :root[data-theme="light"] .theme-toggle .t-dark { display: none; }
+      :root[data-theme="light"] .theme-toggle .t-light { display: inline; }
 
       main { flex: 1; }
 
@@ -158,7 +220,7 @@ const siteUrl = "https://n0qword.github.io";
       }
 
       blockquote {
-        border-left: 3px solid var(--red-dim);
+        border-left: 3px solid var(--blue-dim);
         padding: 0.6rem 0 0.6rem 1rem;
         color: var(--fg2);
         margin: 1.2rem 0;
@@ -181,7 +243,7 @@ const siteUrl = "https://n0qword.github.io";
       .page-desc .count {
         font-family: var(--mono);
         font-size: 0.75rem;
-        color: var(--red);
+        color: var(--blue);
       }
 
       .post-list {
@@ -203,17 +265,19 @@ const siteUrl = "https://n0qword.github.io";
 
       .post-item {
         display: block;
+        color: inherit;
       }
-      .post-item:hover { color: inherit; }
+      .post-item:hover { color: inherit; text-decoration: none; }
 
       .post-item-title {
         font-weight: 600;
         font-size: 0.95rem;
         line-height: 1.4;
         margin-bottom: 0.25rem;
+        color: inherit;
         transition: color 0.15s;
       }
-      .post-item:hover .post-item-title { color: var(--red); }
+      .post-item-title:hover { color: var(--blue); text-decoration: none; }
 
       .post-item-excerpt {
         font-size: 0.85rem;
@@ -245,15 +309,15 @@ const siteUrl = "https://n0qword.github.io";
         font-size: 0.65rem;
         font-weight: 500;
         text-transform: lowercase;
-        border: 1px solid var(--red-dim);
+        border: 1px solid var(--blue-dim);
         border-radius: 3px;
-        color: var(--red);
+        color: var(--blue);
         cursor: pointer;
         transition: background 0.15s, border-color 0.15s;
       }
       .tag:hover {
-        background: var(--red-bg);
-        border-color: var(--red);
+        background: var(--blue-bg);
+        border-color: var(--blue);
       }
 
       .post-meta {
@@ -300,7 +364,7 @@ const siteUrl = "https://n0qword.github.io";
         transition: border-color 0.15s;
       }
       .search-input:focus {
-        border-color: var(--red-dim);
+        border-color: var(--blue-dim);
       }
       .search-input::placeholder { color: var(--fg3); }
 
@@ -315,7 +379,7 @@ const siteUrl = "https://n0qword.github.io";
         color: var(--fg2);
         transition: color 0.15s;
       }
-      .social-links a:hover { color: var(--red); }
+      .social-links a:hover { color: var(--blue); }
       .social-sep { color: var(--line); font-size: 0.7rem; }
 
       .tag-filters {
@@ -336,13 +400,13 @@ const siteUrl = "https://n0qword.github.io";
         transition: border-color 0.15s, color 0.15s, background 0.15s;
       }
       .tag-filter:hover {
-        border-color: var(--red-dim);
-        color: var(--red);
+        border-color: var(--blue-dim);
+        color: var(--blue);
       }
       .tag-filter.active {
-        border-color: var(--red);
-        color: var(--red);
-        background: var(--red-bg);
+        border-color: var(--blue);
+        color: var(--blue);
+        background: var(--blue-bg);
       }
 
       .btn-show-more {
@@ -360,8 +424,8 @@ const siteUrl = "https://n0qword.github.io";
         transition: border-color 0.15s, color 0.15s;
       }
       .btn-show-more:hover {
-        border-color: var(--red-dim);
-        color: var(--red);
+        border-color: var(--blue-dim);
+        color: var(--blue);
       }
       .btn-show-more.hidden { display: none; }
 
@@ -381,7 +445,7 @@ const siteUrl = "https://n0qword.github.io";
         font-family: var(--mono);
         font-size: 0.75rem;
       }
-      .post-footer a { color: var(--red); }
+      .post-footer a { color: var(--blue); }
       .post-footer a:hover { text-decoration: underline; }
 
       footer.pg-footer {
@@ -397,12 +461,19 @@ const siteUrl = "https://n0qword.github.io";
   </head>
   <body>
     <header class="site-header">
-      <a class="site-name" href="/">home</a>
+      <a class="site-brand" href="/" aria-label="home">
+        <img class="brand-ico ico-dark" src="/icons/iceking-dark.png" alt="" />
+        <img class="brand-ico ico-light" src="/icons/iceking-light.png" alt="" />
+      </a>
       <nav>
         <a href="/posts/">posts</a>
         <a href="/notes/">notes</a>
         <a href="/talks/">talks</a>
         <a href="/about/">about</a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle color theme">
+          <span class="t-dark" aria-hidden="true">☾</span>
+          <span class="t-light" aria-hidden="true">☀</span>
+        </button>
       </nav>
     </header>
     <main>
@@ -411,5 +482,17 @@ const siteUrl = "https://n0qword.github.io";
     <footer class="pg-footer">
       © {year} {SITE.author} — {siteName}
     </footer>
+    <script is:inline>
+      (function () {
+        var btn = document.getElementById("theme-toggle");
+        if (!btn) return;
+        btn.addEventListener("click", function () {
+          var cur = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+          var next = cur === "light" ? "dark" : "light";
+          document.documentElement.setAttribute("data-theme", next);
+          try { localStorage.setItem("theme", next); } catch (e) {}
+        });
+      })();
+    </script>
   </body>
 </html>

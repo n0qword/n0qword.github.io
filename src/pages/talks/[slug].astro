@@ -6,7 +6,7 @@ import path from "node:path";
 export async function getStaticPaths() {
   const talksRoot = path.join(process.cwd(), "public", "talks");
   if (!fs.existsSync(talksRoot)) return [];
-  const slugs: { params: { slug: string }; props: { title: string; date: string; slides: number; description?: string } }[] = [];
+  const slugs: { params: { slug: string }; props: { title: string; date: string; slides: number; description?: string; slidesLink?: string; video?: string } }[] = [];
   for (const entry of fs.readdirSync(talksRoot, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     const metaPath = path.join(talksRoot, entry.name, "meta.json");
@@ -19,6 +19,8 @@ export async function getStaticPaths() {
         date: meta.date ?? "",
         slides: meta.slides ?? 0,
         description: meta.description ?? "",
+        slidesLink: meta.slidesLink ?? meta.pdf ?? "",
+        video: meta.video ?? "",
       },
     });
   }
@@ -26,7 +28,14 @@ export async function getStaticPaths() {
 }
 
 const { slug } = Astro.params;
-const { title, date, slides, description } = Astro.props as { title: string; date: string; slides: number; description?: string };
+const { title, date, slides, description, slidesLink, video } = Astro.props as {
+  title: string;
+  date: string;
+  slides: number;
+  description?: string;
+  slidesLink?: string;
+  video?: string;
+};
 const formatDate = (d: string) => {
   if (!d) return "";
   const dt = new Date(d + "T00:00:00");
@@ -43,6 +52,12 @@ const slideNums = Array.from({ length: slides }, (_, i) => String(i + 1).padStar
       {date && <span class="sep">/</span>}
       <span>{slides} slides</span>
     </div>
+    {(slidesLink || video) && (
+      <div class="talk-links">
+        {slidesLink && <a class="talk-link" href={slidesLink}>slides</a>}
+        {video && <a class="talk-link" href={video} rel="noopener noreferrer" target="_blank">video</a>}
+      </div>
+    )}
     <div class="deck">
       {slideNums.map((num) => (
         <img class="deck-slide" src={"/talks/" + slug + "/slide-" + num + ".png"} alt={"Slide " + num} loading={num === "01" ? "eager" : "lazy"} />
@@ -70,5 +85,24 @@ const slideNums = Array.from({ length: slides }, (_, i) => String(i + 1).padStar
   }
   .post-footer .sep {
     color: var(--line);
+  }
+  .talk-links {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+  .talk-link {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    padding: 0.35rem 0.75rem;
+    border: 1px solid var(--blue-dim);
+    border-radius: 6px;
+    color: var(--blue);
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+  }
+  .talk-link:hover {
+    background: var(--blue-bg);
+    border-color: var(--blue);
+    color: var(--blue);
   }
 </style>

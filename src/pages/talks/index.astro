@@ -12,6 +12,8 @@ type Talk = {
   date: string;
   slides: number;
   description?: string;
+  slidesLink?: string;
+  video?: string;
 };
 
 const talks: Talk[] = [];
@@ -27,6 +29,8 @@ if (fs.existsSync(talksRoot)) {
       date: meta.date ?? "",
       slides: meta.slides ?? 0,
       description: meta.description ?? "",
+      slidesLink: meta.slidesLink ?? meta.pdf ?? "",
+      video: meta.video ?? "",
     });
   }
 }
@@ -58,8 +62,26 @@ const formatDate = (d: string) => {
               <span>{talk.slides} slides</span>
             </div>
           </a>
+          {(talk.slidesLink || talk.video) && (
+            <div class="talk-links">
+              {talk.slidesLink && <a class="talk-link" href={talk.slidesLink}>slides</a>}
+              {talk.video && <a class="talk-link" href={talk.video} rel="noopener noreferrer" target="_blank">video</a>}
+            </div>
+          )}
         </li>
       ))}
     </ul>
   )}
 </Layout>
+
+<style>
+  .talk-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 0.4rem;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+  }
+  .talk-links .talk-link { color: var(--blue); }
+  .talk-link:hover { text-decoration: underline; }
+</style>

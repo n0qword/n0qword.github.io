@@ -2,5 +2,6 @@
     "date":  "2026-08-19",
     "title":  "BYOVD Unleashed: From vulnerable drivers to Windows kernel control",
     "description":  "A talk on BYOVD(Bring Your Own Vulnerable Driver) attacks, presented at CFC Week 2026.",
-    "slides":  30
+    "slides":  30,
+    "video":  "https://www.youtube.com/live/f7f-HV6Kec0?si=x3cpX4WpEROYZjTF&t=299"
 }
