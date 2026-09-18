@@ -56,18 +56,18 @@ const formatDate = (d: string) => {
           <a class="post-item" href={"/talks/" + talk.slug + "/"}>
             <div class="post-item-title">{talk.title}</div>
             {talk.description && <p class="post-item-excerpt">{talk.description}</p>}
-            <div class="post-item-meta">
-              {talk.date && <time>{formatDate(talk.date)}</time>}
-              {talk.date && <span>/</span>}
-              <span>{talk.slides} slides</span>
-            </div>
           </a>
-          {(talk.slidesLink || talk.video) && (
-            <div class="talk-links">
-              {talk.slidesLink && <a class="talk-link" href={talk.slidesLink}>slides</a>}
-              {talk.video && <a class="talk-link" href={talk.video} rel="noopener noreferrer" target="_blank">video</a>}
-            </div>
-          )}
+          <div class="post-item-meta">
+            <a class="post-item-link" href={"/talks/" + talk.slug + "/"}>
+              {talk.date && <time>{formatDate(talk.date)}</time>}
+              {talk.date && <span class="sep"> / </span>}
+              <span>{talk.slides} slides</span>
+            </a>
+            {talk.slidesLink && <span class="sep"> / </span>}
+            {talk.slidesLink && <a class="talk-link" href={talk.slidesLink}>slides</a>}
+            {talk.video && <span class="sep"> / </span>}
+            {talk.video && <a class="talk-link" href={talk.video} rel="noopener noreferrer" target="_blank">video</a>}
+          </div>
         </li>
       ))}
     </ul>
@@ -75,13 +75,20 @@ const formatDate = (d: string) => {
 </Layout>
 
 <style>
-  .talk-links {
-    display: flex;
-    gap: 1rem;
-    margin-top: 0.4rem;
-    font-family: var(--mono);
-    font-size: 0.7rem;
+  .post-item-meta .sep {
+    color: var(--line);
   }
-  .talk-links .talk-link { color: var(--blue); }
-  .talk-link:hover { text-decoration: underline; }
+  .post-item-meta .post-item-link {
+    color: inherit;
+  }
+  .post-item-meta .post-item-link:hover {
+    color: inherit;
+    text-decoration: none;
+  }
+  .post-item-meta .talk-link {
+    color: var(--blue);
+  }
+  .post-item-meta .talk-link:hover {
+    text-decoration: underline;
+  }
 </style>

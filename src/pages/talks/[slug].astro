@@ -49,15 +49,13 @@ const slideNums = Array.from({ length: slides }, (_, i) => String(i + 1).padStar
     <h1>{title}</h1>
     <div class="post-meta">
       {date && <time>{formatDate(date)}</time>}
-      {date && <span class="sep">/</span>}
+      {date && <span class="sep"> / </span>}
       <span>{slides} slides</span>
+      {slidesLink && <span class="sep"> / </span>}
+      {slidesLink && <a class="talk-link" href={slidesLink}>slides</a>}
+      {video && <span class="sep"> / </span>}
+      {video && <a class="talk-link" href={video} rel="noopener noreferrer" target="_blank">video</a>}
     </div>
-    {(slidesLink || video) && (
-      <div class="talk-links">
-        {slidesLink && <a class="talk-link" href={slidesLink}>slides</a>}
-        {video && <a class="talk-link" href={video} rel="noopener noreferrer" target="_blank">video</a>}
-      </div>
-    )}
     <div class="deck">
       {slideNums.map((num) => (
         <img class="deck-slide" src={"/talks/" + slug + "/slide-" + num + ".png"} alt={"Slide " + num} loading={num === "01" ? "eager" : "lazy"} />
@@ -86,23 +84,11 @@ const slideNums = Array.from({ length: slides }, (_, i) => String(i + 1).padStar
   .post-footer .sep {
     color: var(--line);
   }
-  .talk-links {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1.25rem;
-  }
   .talk-link {
-    font-family: var(--mono);
-    font-size: 0.7rem;
-    padding: 0.35rem 0.75rem;
-    border: 1px solid var(--blue-dim);
-    border-radius: 6px;
     color: var(--blue);
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
   }
   .talk-link:hover {
-    background: var(--blue-bg);
-    border-color: var(--blue);
     color: var(--blue);
+    text-decoration: underline;
   }
 </style>
