@@ -48,7 +48,7 @@ const formatDate = (d: string) => {
     <span class="count">{String(talks.length).padStart(2, "0")}</span> &nbsp;presentations
   </p>
   {talks.length === 0 ? (
-    <p style="color: var(--fg2); font-size: 0.85rem;">no talks yet — drop a .pptx in the talks/ folder and run: npm run talks:export</p>
+    <p style="color: var(--fg2); font-size: 0.95rem;">no talks yet — drop a .pptx in the talks/ folder and run: npm run talks:export</p>
   ) : (
     <ul class="post-list">
       {talks.map((talk) => (

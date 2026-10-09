@@ -15,7 +15,7 @@ const formatDate = (d: Date) =>
     <span class="count">{String(notes.length).padStart(2, "0")}</span> &nbsp;random notes
   </p>
   {notes.length === 0 ? (
-    <p style="color: var(--fg2); font-size: 0.85rem;">no notes yet</p>
+    <p style="color: var(--fg2); font-size: 0.95rem;">no notes yet</p>
   ) : (
     <ul class="post-list">
       {notes.map((note) => (

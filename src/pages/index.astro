@@ -29,7 +29,7 @@ const formatDate = (d: Date) =>
   </div>
   <div class="search-bar">
     <input class="search-input" type="text" id="search" placeholder="search posts..." autocomplete="off" />
-    <div class="tag-filters" id="tag-filters">
+    <div class="tag-filters">
       {allTags.map((tag) => (
         <button class="tag-filter" data-tag={tag}>{tag}</button>
       ))}
@@ -60,7 +60,7 @@ const formatDate = (d: Date) =>
   {posts.length > INITIAL_COUNT && (
     <button class="btn-show-more" id="btn-show-more">show more</button>
   )}
-  <p id="no-results" style="display: none; text-align: center; font-family: var(--mono); font-size: 0.75rem; color: var(--fg3); margin-top: 1.5rem;">
+  <p id="no-results" style="display: none; text-align: center; font-family: var(--mono); font-size: 0.82rem; color: var(--fg3); margin-top: 1.5rem;">
     no posts match your search
   </p>
   <script>import "../scripts/filters.js";</script>
@@ -73,13 +73,13 @@ const formatDate = (d: Date) =>
     }
     .hero h1 {
       font-family: var(--mono);
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       font-weight: 500;
       margin-bottom: 0.5rem;
     }
     .hero-text {
       color: var(--fg2);
-      font-size: 0.9rem;
+      font-size: 1rem;
       margin-bottom: 0.8rem;
       line-height: 1.7;
     }
