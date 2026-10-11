@@ -253,18 +253,16 @@ const siteUrl = "https://n0qword.github.io";
 
       .youtube-embed {
         position: relative;
-        width: min(calc(100vw - 3rem), 1100px);
+        width: 100%;
         aspect-ratio: 16 / 9;
         margin-block: 2.25rem;
-        margin-left: 50%;
-        transform: translateX(-50%);
         overflow: hidden;
         background: var(--bg1);
-        border-radius: 18px;
+        border-radius: 14px;
         box-shadow:
           0 0 0 1px color-mix(in srgb, var(--line) 45%, transparent),
-          0 0 34px color-mix(in srgb, var(--blue-dim) 18%, transparent),
-          0 24px 80px rgba(0, 0, 0, 0.35);
+          0 0 24px color-mix(in srgb, var(--blue-dim) 16%, transparent),
+          0 16px 56px rgba(0, 0, 0, 0.3);
       }
 
       .youtube-embed iframe {
@@ -276,9 +274,8 @@ const siteUrl = "https://n0qword.github.io";
 
       @media (max-width: 560px) {
         .youtube-embed {
-          width: calc(100vw - 1.5rem);
           margin-block: 1.75rem;
-          border-radius: 12px;
+          border-radius: 10px;
         }
       }
 
