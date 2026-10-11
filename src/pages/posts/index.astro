@@ -27,7 +27,7 @@ const siteName = SITE.name;
   <ul class="post-list" id="post-list">
     {posts.map((post) => (
       <li data-tags={(post.data.tags ?? []).join(",")}>
-        <a class="post-item" href={"/blog/" + post.slug + "/"}>
+        <a class="post-item" href={"/posts/" + post.slug + "/"}>
           <div class="post-item-title">{post.data.title}</div>
           <p class="post-item-excerpt">{post.data.description}</p>
           <div class="post-item-meta">
