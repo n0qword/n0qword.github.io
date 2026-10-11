@@ -1,7 +1,7 @@
 ---
 title: "Chromium Enterprise Policies for Offensive Tradecraft — Part 1"
 description: "Enterprise browser policies provide a trusted control plane for managing browsers at scale. This post explores how that same control plane can be repurposed as offensive tradecraft."
-pubDate: 2026-10-08
+pubDate: 2026-10-11
 tags: [research, tradecraft]
 image: /blog/images/rebpa/card.jpg
 ---
@@ -10,7 +10,7 @@ Browsers play an important role in Red Team operations, where cookies, sessions,
 
 Previous work by [@asaurusrex](https://medium.com/@marcusthebrody/silently-install-macos-chrome-extensions-part-2-c9deab4216cd) described silently installing extensions through `Secure Preferences`. [Andrew Gomez's work](https://specterops.io/blog/2026/08/13/chromium-extension-c2-persistence/) at SpecterOps took that profile-level primitive further with Ditto. That raised a new question: could enterprise browser policies provide a different path to extension installation?
 
-This post explores Chromium enterprise policies as an alternative mechanism for controlling browser behavior during Red Team engagements. It examines cloud enrollment, policy precedence, and forced extension installation, including the limitations encountered along the way.
+This post explores Chromium (specifically Google Chrome) enterprise policies as an alternative mechanism for controlling browser behavior during Red Team engagements. It examines cloud enrollment, policy precedence, and forced extension installation, including the limitations encountered along the way.
 
 ## Overview of Enterprise Browser Policies
 
@@ -44,7 +44,7 @@ The idea, then, is to use the GPO we can edit to distribute this configuration:
 
 ![img4](/blog/images/rebpa/settokengpo.png)
 
-This makes the `Chrome-Browser-Baseline` GPO set our token on any machine where the policy is applied. If the GPO is linked to an OU containing `STAGE-WIN01`, once the policy is processed, all Chrome processes must be closed and must be launched again for enrollment to occur.
+This makes the `Chrome-Browser-Baseline` GPO set our token on any machine where the policy is applied. If the GPO is linked to an OU containing `STAGE-WIN01`, once the policy is processed, Chrome must be fully closed and restarted.
 
 `chrome://policy` can confirm that `CloudManagementEnrollmentToken` was applied locally. Successful enrollment should then be confirmed in our Chrome Enterprise Core console, where the browser appears as a managed browser.
 
@@ -88,7 +88,7 @@ Edge supports a related, but distinct, cloud-management flow through Microsoft E
 
 The [ExtensionInstallForcelist](https://chromeenterprise.google/policies/extension-install-forcelist/) policy allows us to install an extension with the `force_installed` flag. This makes the extension persistent: users cannot remove it, and it is silently installed in the managed browser.
 
-First, we tried to replicate what `Silent_Chrome` does, but at the policy level. We derived the ID of a legitimate extension, but after reading the documentation for policy-based installation, we found that the extension had to be packaged in the CRX3 format.
+First, we tried to replicate what `Silent_Chrome` does, but at the policy plane. We derived the ID of a legitimate extension, but after reading the documentation for policy-based installation, we found that the extension had to be packaged in the CRX3 format.
 
 There is a problem with this format that prevents me from spoofing the ID, but first, let's look at what `Silent_Chrome` does.
 
@@ -104,7 +104,7 @@ The important part is that the policy plane has a very specific path. When Chrom
 policy → update_url → download CRX → Verify() → VerifyCrx3() → ReadHashAndVerifyArchive()
 ```
 
-This is an entirely different installation path, with checks that made installing an extension with a spoofed hash much more difficult.
+This is an entirely different installation path, with checks that made installing an extension with a spoofed ID much more difficult.
 
 Despite this small disappointment, we continued the research, as this policy still gives attackers something interesting to work with.
 
@@ -141,7 +141,7 @@ With the update manifest in place, We applied the policy through a GPO:
 
 ![img11](/blog/images/rebpa/extensionforcegpo.png)
 
-Chrome fetched the `.crx` at the next Group Policy refresh, verified its CRX3 signature, and installed the extension on the test browsers in scope. The video shows the resulting Chrome installation and callback to our attacker server:
+Chrome fetched the `.crx` at the next GPO refresh, verified its CRX3 signature, and installed the extension on the test browsers in scope. The video shows the resulting Chrome installation and callback to our attacker server:
 
 ::youtube[https://youtu.be/7O_DskI7JZc]
 
