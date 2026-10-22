@@ -38,22 +38,27 @@ const formatDate = (d: Date) =>
   <ul class="post-list" id="post-list">
     {posts.map((post, i) => (
       <li data-tags={(post.data.tags ?? []).join(",")} class={i >= INITIAL_COUNT ? "hidden-more" : ""}>
-        <a class="post-item" href={"/posts/" + post.slug + "/"}>
-          <div class="post-item-title">{post.data.title}</div>
-          <p class="post-item-excerpt">{post.data.description}</p>
-          <div class="post-item-meta">
-            <time datetime={post.data.pubDate.toISOString()}>
-              {formatDate(post.data.pubDate)}
-            </time>
-            {post.data.tags && post.data.tags.length > 0 && (
-              <div class="post-item-tags">
-                {post.data.tags.map((tag) => (
-                  <span class="tag" data-tag={tag}>{tag}</span>
-                ))}
-              </div>
-            )}
+        <div class="post-item post-item-media">
+          <div class="post-item-body">
+            <a class="post-item-title" href={"/posts/" + post.slug + "/"}>{post.data.title}</a>
+            <p class="post-item-excerpt">{post.data.description}</p>
+            <div class="post-item-meta">
+              <time datetime={post.data.pubDate.toISOString()}>
+                {formatDate(post.data.pubDate)}
+              </time>
+              {post.data.tags && post.data.tags.length > 0 && (
+                <div class="post-item-tags">
+                  {post.data.tags.map((tag) => (
+                    <span class="tag" data-tag={tag}>{tag}</span>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </a>
+          {post.data.image && (
+            <img class="post-item-thumb" src={post.data.image} alt="" loading="lazy" />
+          )}
+        </div>
       </li>
     ))}
   </ul>
@@ -72,9 +77,10 @@ const formatDate = (d: Date) =>
       border-bottom: 1px solid var(--line);
     }
     .hero h1 {
-      font-family: var(--mono);
-      font-size: 1.25rem;
-      font-weight: 500;
+      font-family: var(--display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
       margin-bottom: 0.5rem;
     }
     .hero-text {
