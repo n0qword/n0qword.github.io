@@ -10,7 +10,7 @@
   let activeTag = null;
 
   function filterPosts() {
-    const query = searchInput.value.toLowerCase();
+    const query = searchInput ? searchInput.value.toLowerCase() : "";
     const isSearching = !!query || !!activeTag;
     let visibleCount = 0;
 

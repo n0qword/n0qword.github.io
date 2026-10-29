@@ -27,8 +27,7 @@ const formatDate = (d: Date) =>
       <a href={"mailto:" + SITE.mail}>mail</a>
     </div>
   </div>
-  <div class="search-bar">
-    <input class="search-input" type="text" id="search" placeholder="search posts..." autocomplete="off" />
+  <div class="filters-bar">
     <div class="tag-filters">
       {allTags.map((tag) => (
         <button class="tag-filter" data-tag={tag}>{tag}</button>
@@ -38,26 +37,17 @@ const formatDate = (d: Date) =>
   <ul class="post-list" id="post-list">
     {posts.map((post, i) => (
       <li data-tags={(post.data.tags ?? []).join(",")} class={i >= INITIAL_COUNT ? "hidden-more" : ""}>
-        <div class="post-item post-item-media">
-          <div class="post-item-body">
-            <a class="post-item-title" href={"/posts/" + post.slug + "/"}>{post.data.title}</a>
-            <p class="post-item-excerpt">{post.data.description}</p>
-            <div class="post-item-meta">
-              <time datetime={post.data.pubDate.toISOString()}>
-                {formatDate(post.data.pubDate)}
-              </time>
-              {post.data.tags && post.data.tags.length > 0 && (
-                <div class="post-item-tags">
-                  {post.data.tags.map((tag) => (
-                    <span class="tag" data-tag={tag}>{tag}</span>
-                  ))}
-                </div>
-              )}
-            </div>
+        <div class="post-item">
+          <a class="post-item-title" href={"/posts/" + post.slug + "/"}>{post.data.title}</a>
+          <p class="post-item-excerpt">{post.data.description}</p>
+          <div class="post-item-meta">
+            <time datetime={post.data.pubDate.toISOString()}>
+              {formatDate(post.data.pubDate)}
+            </time>
+            {post.data.tags && post.data.tags.length > 0 && (
+              <span class="post-item-taglist">{post.data.tags.join(" | ")}</span>
+            )}
           </div>
-          {post.data.image && (
-            <img class="post-item-thumb" src={post.data.image} alt="" loading="lazy" />
-          )}
         </div>
       </li>
     ))}
