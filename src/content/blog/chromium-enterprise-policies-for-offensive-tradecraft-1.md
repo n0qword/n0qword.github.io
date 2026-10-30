@@ -120,7 +120,7 @@ First, we built the test extension and packed it as CRX3 from `Chrome DevTools`:
 
 ![img9](/blog/images/rebpa/packext.png)
 
-With the `.crx` ready, we derived the extension ID using [this script](https://github.com/n0qword/JudgingYourBrowser/blob/main/get_crx_id.py).
+With the `.crx` ready, we derived the extension ID using [this script](https://gist.github.com/n0qword/796096ca012bb6efa9b17eabf0f7a661#file-get_crx_id-py).
 
 ![img10](/blog/images/rebpa/getid.png)
 
