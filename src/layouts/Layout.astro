@@ -36,19 +36,8 @@ const ogImage = image ? (image.startsWith("http") ? image : siteUrl + image) : "
     {ogImage && <meta name="twitter:image" content={ogImage} />}
 
     <link rel="icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" media="(prefers-color-scheme: light)" href="/icons/iceking-light.png" />
-    <link rel="icon" type="image/png" media="(prefers-color-scheme: dark)" href="/icons/iceking-dark.png" />
+    <link rel="icon" type="image/png" href="/icons/iceking-dark.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
-    <script is:inline>
-      (function () {
-        var t = localStorage.getItem("theme");
-        if (t !== "light" && t !== "dark") {
-          t = window.matchMedia && window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
-        }
-        document.documentElement.setAttribute("data-theme", t);
-      })();
-    </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -65,14 +54,14 @@ const ogImage = image ? (image.startsWith("http") ? image : siteUrl + image) : "
         --display: "Bricolage Grotesque", "IBM Plex Sans", system-ui, sans-serif;
       }
 
-      :root, :root[data-theme="dark"] {
-        --bg: #0b0b0d;
-        --bg1: #131316;
-        --bg2: #1a1a1e;
-        --line: #2a2a2f;
+      :root {
+        --bg: #050506;
+        --bg1: #0c0c0e;
+        --bg2: #141417;
+        --line: #26262a;
         --fg: #f2f2f2;
-        --fg2: #a0a0a6;
-        --fg3: #6b6b72;
+        --fg2: #a8a8ae;
+        --fg3: #6e6e75;
         --accent: #ededed;
         --accent-dim: #8a8a90;
         --accent-bg: #1f1f23;
@@ -82,32 +71,15 @@ const ogImage = image ? (image.startsWith("http") ? image : siteUrl + image) : "
         --accent2-bg: #1c1c20;
       }
 
-      :root[data-theme="light"] {
-        --bg: #fafafa;
-        --bg1: #f2f2f2;
-        --bg2: #e8e8e8;
-        --line: #dcdcdc;
-        --fg: #111112;
-        --fg2: #55555c;
-        --fg3: #8a8a90;
-        --accent: #111112;
-        --accent-dim: #55555c;
-        --accent-bg: #ececec;
-        --title: #111112;
-        --accent2: #55555c;
-        --accent2-dim: #8a8a90;
-        --accent2-bg: #efefef;
-      }
-
       * { margin: 0; padding: 0; box-sizing: border-box; }
       ::selection { background: color-mix(in srgb, var(--fg) 20%, transparent); }
 
-      html { font-size: 16px; }
+      html { font-size: 16px; background: var(--bg); }
 
       body {
         font-family: var(--body);
         font-weight: 400;
-        background: var(--bg);
+        background: transparent;
         color: var(--fg);
         line-height: 1.75;
         padding: 2.5rem 1.5rem 5rem;
@@ -116,6 +88,27 @@ const ogImage = image ? (image.startsWith("http") ? image : siteUrl + image) : "
         min-height: 100vh;
         display: flex;
         flex-direction: column;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: -1%;
+        z-index: -1;
+        background-image:
+          linear-gradient(
+            to bottom,
+            color-mix(in srgb, var(--bg) 52%, transparent) 0%,
+            color-mix(in srgb, var(--bg) 20%, transparent) 22%,
+            color-mix(in srgb, var(--bg) 5%, transparent) 48%,
+            color-mix(in srgb, var(--bg) 38%, transparent) 100%
+          ),
+          url("/img/style-bg.svg");
+        background-size: cover, cover;
+        background-position: center top, center top;
+        background-repeat: no-repeat, no-repeat;
+        opacity: 0.95;
+        pointer-events: none;
       }
 
       a { color: var(--accent); text-decoration: none; }
@@ -148,9 +141,6 @@ const ogImage = image ? (image.startsWith("http") ? image : siteUrl + image) : "
         border-radius: 0;
         display: block;
       }
-      .brand-ico.ico-light { display: none; }
-      :root[data-theme="light"] .brand-ico.ico-dark { display: none; }
-      :root[data-theme="light"] .brand-ico.ico-light { display: block; }
 
       .site-header nav {
         display: flex;
@@ -164,29 +154,6 @@ const ogImage = image ? (image.startsWith("http") ? image : siteUrl + image) : "
         transition: color 0.15s;
       }
       .site-header nav a:hover { color: var(--fg); }
-
-      .theme-toggle {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0.2rem 0.4rem;
-        background: transparent;
-        border: 1px solid var(--line);
-        border-radius: 6px;
-        color: var(--fg2);
-        font-size: 0.86rem;
-        line-height: 1;
-        cursor: pointer;
-        transition: border-color 0.15s, color 0.15s;
-      }
-      .theme-toggle:hover {
-        border-color: var(--accent-dim);
-        color: var(--accent);
-      }
-      .theme-toggle .t-dark { display: inline; }
-      .theme-toggle .t-light { display: none; }
-      :root[data-theme="light"] .theme-toggle .t-dark { display: none; }
-      :root[data-theme="light"] .theme-toggle .t-light { display: inline; }
 
       main { flex: 1; }
 
@@ -247,10 +214,6 @@ const ogImage = image ? (image.startsWith("http") ? image : siteUrl + image) : "
       }
       .astro-code,
       .astro-code span {
-        color: var(--shiki-light);
-      }
-      :root[data-theme="dark"] .astro-code,
-      :root[data-theme="dark"] .astro-code span {
         color: var(--shiki-dark);
       }
 
@@ -532,18 +495,13 @@ const ogImage = image ? (image.startsWith("http") ? image : siteUrl + image) : "
   <body>
     <header class="site-header">
       <a class="site-brand" href="/" aria-label="home">
-        <img class="brand-ico ico-dark" src="/icons/iceking-dark.png" alt="" />
-        <img class="brand-ico ico-light" src="/icons/iceking-light.png" alt="" />
+        <img class="brand-ico" src="/icons/iceking-dark.png" alt="" />
       </a>
       <nav>
         <a href="/posts/">posts</a>
         <a href="/notes/">notes</a>
         <a href="/talks/">talks</a>
         <a href="/about/">about</a>
-        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle color theme">
-          <span class="t-dark" aria-hidden="true">☾</span>
-          <span class="t-light" aria-hidden="true">☀</span>
-        </button>
       </nav>
     </header>
     <main>
@@ -552,17 +510,5 @@ const ogImage = image ? (image.startsWith("http") ? image : siteUrl + image) : "
     <footer class="pg-footer">
       © {year} {SITE.author} — {siteName}
     </footer>
-    <script is:inline>
-      (function () {
-        var btn = document.getElementById("theme-toggle");
-        if (!btn) return;
-        btn.addEventListener("click", function () {
-          var cur = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
-          var next = cur === "light" ? "dark" : "light";
-          document.documentElement.setAttribute("data-theme", next);
-          try { localStorage.setItem("theme", next); } catch (e) {}
-        });
-      })();
-    </script>
   </body>
 </html>
