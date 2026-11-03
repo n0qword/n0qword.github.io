@@ -1,0 +1,22 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { frontmatter as SITE } from "../../data/home.md";
+import projects from "../../data/projects.json";
+
+const list = [...projects].sort((a, b) => a.name.localeCompare(b.name));
+---
+
+<Layout title={"Projects — " + SITE.name} description="Open-source projects and tooling">
+  <h1>Projects</h1>
+  <div class="page-sep" aria-hidden="true"></div>
+  <ul class="post-list">
+    {list.map((project) => (
+      <li>
+        <div class="post-item">
+          <a class="post-item-title" href={project.url} target="_blank" rel="noopener">{project.name}</a>
+          <p class="post-item-excerpt">{project.description}</p>
+        </div>
+      </li>
+    ))}
+  </ul>
+</Layout>

@@ -37,17 +37,22 @@ const formatDate = (d: Date) =>
   <ul class="post-list" id="post-list">
     {posts.map((post, i) => (
       <li data-tags={(post.data.tags ?? []).join(",")} class={i >= INITIAL_COUNT ? "hidden-more" : ""}>
-        <div class="post-item">
-          <a class="post-item-title" href={"/posts/" + post.slug + "/"}>{post.data.title}</a>
-          <p class="post-item-excerpt">{post.data.description}</p>
-          <div class="post-item-meta">
-            <time datetime={post.data.pubDate.toISOString()}>
-              {formatDate(post.data.pubDate)}
-            </time>
-            {post.data.tags && post.data.tags.length > 0 && (
-              <span class="post-item-taglist">{post.data.tags.join(" | ")}</span>
-            )}
+        <div class="post-item post-item-media">
+          <div class="post-item-body">
+            <a class="post-item-title" href={"/posts/" + post.slug + "/"}>{post.data.title}</a>
+            <p class="post-item-excerpt">{post.data.description}</p>
+            <div class="post-item-meta">
+              <time datetime={post.data.pubDate.toISOString()}>
+                {formatDate(post.data.pubDate)}
+              </time>
+              {post.data.tags && post.data.tags.length > 0 && (
+                <span class="post-item-taglist">{post.data.tags.join(" / ")}</span>
+              )}
+            </div>
           </div>
+          {post.data.image && (
+            <img class="post-item-thumb" src={post.data.image} alt="" loading="lazy" />
+          )}
         </div>
       </li>
     ))}
