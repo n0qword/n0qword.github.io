@@ -62,13 +62,13 @@ const ogImage = image ? (image.startsWith("http") ? image : siteUrl + image) : "
         --fg: #f2f2f2;
         --fg2: #a8a8b8;
         --fg3: #6e6e82;
-        --accent: #8b9cf7;
-        --accent-dim: #6d7ae0;
-        --accent-bg: #1e2440;
+        --accent: #1fa87b;
+        --accent-dim: #158864;
+        --accent-bg: #0e2a22;
         --title: #f5f5f5;
-        --accent2: #a78bfa;
-        --accent2-dim: #8b5cf6;
-        --accent2-bg: #241d3d;
+        --accent2: #1fa87b;
+        --accent2-dim: #158864;
+        --accent2-bg: #0e2a22;
       }
 
       * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -133,7 +133,7 @@ const ogImage = image ? (image.startsWith("http") ? image : siteUrl + image) : "
         color: var(--fg2);
         transition: color 0.15s;
       }
-      .site-header nav a:hover { color: var(--fg); }
+      .site-header nav a:hover { color: var(--accent); }
 
       main { flex: 1; }
 
