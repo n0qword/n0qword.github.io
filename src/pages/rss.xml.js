@@ -1,6 +1,7 @@
 import rss from "@astrojs/rss";
 import { getCollection } from "astro:content";
 import { frontmatter as SITE } from "../data/home.md";
+import { postDescription } from "../lib/post";
 
 export async function GET(context) {
   const posts = await getCollection("blog");
@@ -11,7 +12,7 @@ export async function GET(context) {
     items: posts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.pubDate,
-      description: post.data.description,
+      description: postDescription(post),
       link: `/posts/${post.slug}/`,
     })),
   });

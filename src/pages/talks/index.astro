@@ -42,12 +42,10 @@ const formatDate = (d: string) => {
 };
 ---
 
-<Layout title={"Talks — " + SITE.name} description="Presentations & talks">
-  <h1>Talks</h1>
-  <p class="page-desc">
-    <span class="count">{String(talks.length).padStart(2, "0")}</span> &nbsp;presentations
-  </p>
-  {talks.length === 0 ? (
+<Layout title={"Presentations — " + SITE.name} description="Presentations & talks">
+  <h1>Presentations</h1>
+  <div class="page-sep" aria-hidden="true"></div>
+    {talks.length === 0 ? (
     <p style="color: var(--fg2); font-size: 0.95rem;">no talks yet — drop a .pptx in the talks/ folder and run: npm run talks:export</p>
   ) : (
     <ul class="post-list">

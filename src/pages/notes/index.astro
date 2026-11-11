@@ -11,9 +11,7 @@ const formatDate = (d: Date) =>
 
 <Layout title={"Notes — " + SITE.name} description="Random notes">
   <h1>Notes</h1>
-  <p class="page-desc">
-    <span class="count">{String(notes.length).padStart(2, "0")}</span> &nbsp;random notes
-  </p>
+  <p class="page-desc">random notes &amp; opinions</p>
   {notes.length === 0 ? (
     <p style="color: var(--fg2); font-size: 0.95rem;">no notes yet</p>
   ) : (

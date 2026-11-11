@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { frontmatter as SITE } from "../../data/home.md";
+import { postDescription } from "../../lib/post";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -13,11 +14,12 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props as { post: any };
 const { Content } = await post.render();
+const description = postDescription(post);
 const formatDate = (d: Date) =>
   d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 ---
 
-<Layout title={post.data.title + " — " + SITE.name} description={post.data.description} image={post.data.image}>
+<Layout title={post.data.title + " — " + SITE.name} description={description} image={post.data.image} centered>
   <article>
     <h1>{post.data.title}</h1>
     <div class="post-meta">

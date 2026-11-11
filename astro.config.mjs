@@ -6,11 +6,7 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkYouTube],
     shikiConfig: {
-      themes: {
-        light: "github-light",
-        dark: "github-dark",
-      },
-      defaultColor: false,
+      theme: "github-dark",
     },
   },
 });

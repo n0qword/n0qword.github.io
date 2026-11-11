@@ -2,6 +2,7 @@
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { frontmatter as SITE } from "../../data/home.md";
+import { postDescription } from "../../lib/post";
 
 const posts = await getCollection("blog");
 posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
@@ -13,9 +14,7 @@ const siteName = SITE.name;
 
 <Layout title={"Posts — " + siteName} description="Full archive of posts">
   <h1>Posts</h1>
-  <p class="page-desc">
-    <span class="count">{String(posts.length).padStart(2, "0")}</span> &nbsp;full archive
-  </p>
+  <p class="page-desc">full archive</p>
   <div class="filters-bar">
     <div class="tag-filters">
       {allTags.map((tag) => (
@@ -26,22 +25,15 @@ const siteName = SITE.name;
   <ul class="post-list" id="post-list">
     {posts.map((post) => (
       <li data-tags={(post.data.tags ?? []).join(",")}>
-        <div class="post-item post-item-media">
-          <div class="post-item-body">
-            <a class="post-item-title" href={"/posts/" + post.slug + "/"}>{post.data.title}</a>
-            <p class="post-item-excerpt">{post.data.description}</p>
-            <div class="post-item-meta">
-              <time datetime={post.data.pubDate.toISOString()}>
-                {formatDate(post.data.pubDate)}
-              </time>
-              {post.data.tags && post.data.tags.length > 0 && (
-                <span class="post-item-taglist">{post.data.tags.join(" / ")}</span>
-              )}
-            </div>
+        <div class="post-item">
+          <a class="post-item-title" href={"/posts/" + post.slug + "/"}>{post.data.title}</a>
+          <div class="post-item-meta">
+            <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time>
+            {post.data.tags && post.data.tags.length > 0 && (
+              <span class="post-item-taglist">{post.data.tags.join(" / ")}</span>
+            )}
           </div>
-          {post.data.image && (
-            <img class="post-item-thumb" src={post.data.image} alt="" loading="lazy" />
-          )}
+          <p class="post-item-excerpt">{postDescription(post)}</p>
         </div>
       </li>
     ))}
